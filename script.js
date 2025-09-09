@@ -45,12 +45,67 @@ form.addEventListener('submit', function (e) {
 
         //Cálculos
         const precoComDesconto: preco * (1 - desconto / 100);
+const i = taxa / 100; // taxa decimal ao mês
+const J_total = precoComDesconto * i * parcelas; // juros simples total
+const outTotalPagar = precoComDesconto + J_total;
+const valorParcela = totalPagar / parcelas;
+const economia = preco - precoComDesconto;
 
+// Exibir resultados principais
+outPrecoComDesconto.textContent = moedaBR(precoComDesconto);
+outValorParcela.textContent = moedaBR(valorParcela);
+outTotalPagar.textContent = moedaBR(totalPagar);
+outEconomia.textContent = moedaBR(economia);
+resultados.hidden = false;
 
-
-
-
-
-    }   
+// Montar/garantir tbody
+let corpoTabela = document.querySelector('#tabela tbody');
+if (!corpoTabela) {
+    const tabela = document.getElementById('tabela');
+    tabela.appendChild(corpoTabela);
 }
+
+corpoTabela.innerHTML = '';
+const juroMesConstante = precoComDesconto *i; // juro dos mês constante
+const amortizacaoConstante = precoComDesconto / parcelas; // amortizacao constante
+
+for (let mes = 1; mes <= parcelas; mes++){
+    // evitar pequenas diferenças de arrependimento no último mês
+    const principalRestante = Math.max(0, precoComDesconto - amortizacaoConstante * mes);
+
+const tr = document.createElement('tr');
+
+const tdMes = document.createElement('td');
+tdMes.textContent = mes;
+
+const tdParcela = document.createElement('td');
+tdParcela.textContent = moedaBR(valorParcela);
+
+const tdJurosMes = document.createElement('td');
+tdJurosMes.textContent = moedaBR(jurosMesConstante);
+
+const tdAmortizacao = document.createElement('td');
+tdAmortizacao.textContent = moedaBR(amortizacaoConstante);
+
+const tdRestante = document.createElement('td');
+tdRestante.textContent = moedaBR(principalRestante);
+
+// Usa appendChild (mais compatível que append com múltiplos args)
+tr.appendChild(tdMes);
+tr.appendChild(tdParcela);
+tr.appendChild(tdJurosMes);
+tr.appendChild(tdAmortizacao);
+tr.appendChild(tdRestante);
+
+corpoTabela.appendChild(tr);
 }
+
+tabelaSecao.hidden = false;
+} catch (err) {
+console.error(err);
+erro.textContent = err.message || 'Ocorreu um erro — abra o Console(F12) para ver detalhes.';
+resultados.hidden = true;
+tabelaSecao.hidden = true;
+}
+});
+});
