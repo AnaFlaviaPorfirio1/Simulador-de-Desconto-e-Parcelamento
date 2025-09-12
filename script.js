@@ -104,7 +104,7 @@ corpoTabela.appendChild(tr);
 tabelaSecao.hidden = false;
 } catch (err) {
     console.error(err);
-    erro.textContent = err.message || 'Ocorreu um erro — abra o Console (F12 para ver detalhes.';
+    erro.textContent = err.message || 'Ocorreu um erro - abra o Console (F12 para ver detalhes.';
     resultados.hidden = true;
     tabelaSecao.hidden = true;
 }
